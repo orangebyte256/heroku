@@ -69,6 +69,10 @@ class Person(room: Room, name: String, id: Int)
         }
       }      
   }
+  def getSum(person: Person):Int = 
+  {
+      neighbors_.get(person).get
+  }
 }
 
 object CommonPerson extends Person(new Room(RoomInfo(-1, -1), -1), "all", -1);

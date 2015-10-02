@@ -1,3 +1,3 @@
 [0m[[0mdebug[0m] [0mCopy resource mappings: [0m
-[0m[[0mdebug[0m] [0m	(E:\source\scala\biils\conf\application.conf,E:\source\scala\biils\target\scala-2.11\classes\application.conf)[0m
-[0m[[0mdebug[0m] [0m	(E:\source\scala\biils\conf\routes,E:\source\scala\biils\target\scala-2.11\classes\routes)[0m
+[0m[[0mdebug[0m] [0m	(E:\temp\scalas\bills\conf\application.conf,E:\temp\scalas\bills\target\scala-2.11\classes\application.conf)[0m
+[0m[[0mdebug[0m] [0m	(E:\temp\scalas\bills\conf\routes,E:\temp\scalas\bills\target\scala-2.11\classes\routes)[0m

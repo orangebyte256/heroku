@@ -20,13 +20,13 @@ import play.mvc.Http.Context.Implicit._
 import views.html._
 
 /**/
-object register extends BaseScalaTemplate[play.twirl.api.HtmlFormat.Appendable,Format[play.twirl.api.HtmlFormat.Appendable]](play.twirl.api.HtmlFormat) with play.twirl.api.Template1[String,play.twirl.api.HtmlFormat.Appendable] {
+object register extends BaseScalaTemplate[play.twirl.api.HtmlFormat.Appendable,Format[play.twirl.api.HtmlFormat.Appendable]](play.twirl.api.HtmlFormat) with play.twirl.api.Template2[String,String,play.twirl.api.HtmlFormat.Appendable] {
 
   /**/
-  def apply/*1.2*/(name: String):play.twirl.api.HtmlFormat.Appendable = {
+  def apply/*1.2*/(name: String, host: String):play.twirl.api.HtmlFormat.Appendable = {
       _display_ {
 
-Seq[Any](format.raw/*1.16*/("""
+Seq[Any](format.raw/*1.30*/("""
 
 """),format.raw/*3.1*/("""<!DOCTYPE html>
 <html lang="en">
@@ -62,7 +62,7 @@ Seq[Any](format.raw/*1.16*/("""
   <body>
 
     <div class="container">
-      <form class="form-signin" action="http:\\192.168.0.7:9000\registerValidate" method="get">
+      <form class="form-signin" action=""""),_display_(/*37.42*/host),format.raw/*37.46*/("""\registerValidate" method="get">
         """),_display_(/*38.10*/if(name == "reply")/*38.29*/ {_display_(Seq[Any](format.raw/*38.31*/("""
           """),format.raw/*39.11*/("""<h2 font-color="red" class="form-signin-heading">Username already exist</h2>
         """)))}/*40.11*/else/*40.16*/{_display_(Seq[Any](format.raw/*40.17*/("""
@@ -107,20 +107,20 @@ Seq[Any](format.raw/*1.16*/("""
 """))}
   }
 
-  def render(name:String): play.twirl.api.HtmlFormat.Appendable = apply(name)
+  def render(name:String,host:String): play.twirl.api.HtmlFormat.Appendable = apply(name,host)
 
-  def f:((String) => play.twirl.api.HtmlFormat.Appendable) = (name) => apply(name)
+  def f:((String,String) => play.twirl.api.HtmlFormat.Appendable) = (name,host) => apply(name,host)
 
   def ref: this.type = this
 
 }
               /*
                   -- GENERATED --
-                  DATE: Fri Sep 25 19:30:51 NOVT 2015
-                  SOURCE: E:/source/scala/biils/app/views/register.scala.html
-                  HASH: 1a7ec21fc320906445b1d5939b0d0b11cf6607cc
-                  MATRIX: 726->1|828->15|856->17|1585->719|1600->725|1657->761|1970->1047|1985->1053|2052->1099|2535->1555|2563->1574|2603->1576|2642->1587|2747->1674|2760->1679|2799->1680|2838->1691|2930->1752|2966->1761|3454->2222|3490->2242|3530->2244|3571->2257|3607->2266|3631->2269|3683->2290|3719->2299|4427->2980|4455->2981|4489->2988|4679->3151|4707->3152|4739->3157
-                  LINES: 26->1|29->1|31->3|48->20|48->20|48->20|53->25|53->25|53->25|66->38|66->38|66->38|67->39|68->40|68->40|68->40|69->41|70->42|71->43|79->51|79->51|79->51|80->52|80->52|80->52|81->53|82->54|96->68|96->68|97->69|103->75|103->75|104->76
+                  DATE: Fri Oct 02 22:49:46 NOVT 2015
+                  SOURCE: E:/temp/scalas/bills/app/views/register.scala.html
+                  HASH: e0d71cc1831422d5c4f991c2dfcd5fc694c0fe7d
+                  MATRIX: 733->1|849->29|877->31|1606->733|1621->739|1678->775|1991->1061|2006->1067|2073->1113|2492->1505|2517->1509|2586->1551|2614->1570|2654->1572|2693->1583|2798->1670|2811->1675|2850->1676|2889->1687|2981->1748|3017->1757|3505->2218|3541->2238|3581->2240|3622->2253|3658->2262|3682->2265|3734->2286|3770->2295|4478->2976|4506->2977|4540->2984|4730->3147|4758->3148|4790->3153
+                  LINES: 26->1|29->1|31->3|48->20|48->20|48->20|53->25|53->25|53->25|65->37|65->37|66->38|66->38|66->38|67->39|68->40|68->40|68->40|69->41|70->42|71->43|79->51|79->51|79->51|80->52|80->52|80->52|81->53|82->54|96->68|96->68|97->69|103->75|103->75|104->76
                   -- GENERATED --
               */
           

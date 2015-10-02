@@ -20,13 +20,13 @@ import play.mvc.Http.Context.Implicit._
 import views.html._
 
 /**/
-object login extends BaseScalaTemplate[play.twirl.api.HtmlFormat.Appendable,Format[play.twirl.api.HtmlFormat.Appendable]](play.twirl.api.HtmlFormat) with play.twirl.api.Template1[String,play.twirl.api.HtmlFormat.Appendable] {
+object login extends BaseScalaTemplate[play.twirl.api.HtmlFormat.Appendable,Format[play.twirl.api.HtmlFormat.Appendable]](play.twirl.api.HtmlFormat) with play.twirl.api.Template2[String,String,play.twirl.api.HtmlFormat.Appendable] {
 
   /**/
-  def apply/*1.2*/(name: String):play.twirl.api.HtmlFormat.Appendable = {
+  def apply/*1.2*/(name: String, host: String):play.twirl.api.HtmlFormat.Appendable = {
       _display_ {
 
-Seq[Any](format.raw/*1.16*/("""
+Seq[Any](format.raw/*1.30*/("""
 
 
 """),format.raw/*4.1*/("""<!DOCTYPE html>
@@ -64,7 +64,7 @@ Seq[Any](format.raw/*1.16*/("""
 
     <div class="container">
 
-      <form class="form-signin" action="http:\\192.168.0.7:9000\loginValidate" method="get">
+      <form class="form-signin" action=""""),_display_(/*39.42*/host),format.raw/*39.46*/("""\loginValidate" method="get">
         """),_display_(/*40.10*/if(name == "error")/*40.29*/ {_display_(Seq[Any](format.raw/*40.31*/("""
           """),format.raw/*41.11*/("""<h2 style="color:#069" class="form-signin-heading">Username already exist</h2>
         """)))}/*42.11*/else/*42.16*/{_display_(Seq[Any](format.raw/*42.17*/("""
@@ -73,7 +73,7 @@ Seq[Any](format.raw/*1.16*/("""
         """),format.raw/*45.9*/("""<input type="text" id="inputUsername" class="form-control" name="username" placeholder="Username" required autofocus>
         <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
-        <a class="btn btn-lg btn-primary btn-block" href="http:\\192.168.0.7:9000\register_" >Зарегестрироваться</a>
+        <a class="btn btn-lg btn-primary btn-block" href=""""),_display_(/*48.60*/host),format.raw/*48.64*/("""\register_" >Зарегестрироваться</a>
       </form>
 
     </div> <!-- /container -->
@@ -86,20 +86,20 @@ Seq[Any](format.raw/*1.16*/("""
 """))}
   }
 
-  def render(name:String): play.twirl.api.HtmlFormat.Appendable = apply(name)
+  def render(name:String,host:String): play.twirl.api.HtmlFormat.Appendable = apply(name,host)
 
-  def f:((String) => play.twirl.api.HtmlFormat.Appendable) = (name) => apply(name)
+  def f:((String,String) => play.twirl.api.HtmlFormat.Appendable) = (name,host) => apply(name,host)
 
   def ref: this.type = this
 
 }
               /*
                   -- GENERATED --
-                  DATE: Fri Sep 25 23:15:06 NOVT 2015
-                  SOURCE: E:/source/scala/biils/app/views/login.scala.html
-                  HASH: 451ffd8fbe85e56b68973295f540427f3be9dd71
-                  MATRIX: 723->1|825->15|857->21|1603->740|1618->746|1675->782|1993->1073|2008->1079|2075->1125|2570->1593|2598->1612|2638->1614|2678->1626|2786->1716|2799->1721|2838->1722|2878->1734|2971->1796|3008->1806
-                  LINES: 26->1|29->1|32->4|49->21|49->21|49->21|54->26|54->26|54->26|68->40|68->40|68->40|69->41|70->42|70->42|70->42|71->43|72->44|73->45
+                  DATE: Fri Oct 02 22:50:19 NOVT 2015
+                  SOURCE: E:/temp/scalas/bills/app/views/login.scala.html
+                  HASH: 34cd8e9c51e3ad39bfa44f94b58e577da5562ba3
+                  MATRIX: 730->1|846->29|878->35|1624->754|1639->760|1696->796|2014->1087|2029->1093|2096->1139|2529->1545|2554->1549|2621->1589|2649->1608|2689->1610|2729->1622|2837->1712|2850->1717|2889->1718|2929->1730|3022->1792|3059->1802|3472->2188|3497->2192
+                  LINES: 26->1|29->1|32->4|49->21|49->21|49->21|54->26|54->26|54->26|67->39|67->39|68->40|68->40|68->40|69->41|70->42|70->42|70->42|71->43|72->44|73->45|76->48|76->48
                   -- GENERATED --
               */
           

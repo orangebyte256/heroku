@@ -10,7 +10,8 @@ import play.api.mvc.WebSocket
 import play.libs.Akka
 import play.api.libs.Crypto
 import scala.concurrent.ExecutionContext.Implicits.global
-
+import java.util.Calendar
+import java.text.SimpleDateFormat
 import java.io._
 import scala.io.Source
 import java.nio.file.{Paths, Files}
@@ -18,6 +19,7 @@ import java.nio.file.{Paths, Files}
 object Global
 {
   val hostIP = "https://quiet-wildwood-1547.herokuapp.com"
+//  val hostIP = "http://localhost:9000"
   var encryptKey : String = "unset"
   val fileUsersName = "users.txt"
 }
@@ -61,7 +63,7 @@ object Manager
       id = id + 1
   }
 
-  def addEventAction(actor_id : Int, subject_id : Int, get_sum : Int, type_message : String, message : String)
+  def addEventAction(actor_id : Int, subject_id : Int, get_sum : Int, type_message : String, date: String, message : String)
   {
       var person = users.get(actor_id).get
       var subject : Person = CommonPerson
@@ -75,7 +77,7 @@ object Manager
         sum = -sum;
       }
       var room_actor = Akka.system.actorSelection("/user/room" + getRoomNum(person.room_.roomInfo_.dormitory, person.room_.roomInfo_.num).toString)
-      room_actor ! addEvent(person, subject, sum, message)  
+      room_actor ! addEvent(person, subject, sum, date, message)  
   }
 
 }
@@ -98,17 +100,17 @@ object BillsController extends Controller {
         println("Hellllllllllllllll1")
         val arr = line.split(" ")
         println(arr)
-        val message = arr.slice(4, arr.size)
+        val message = arr.slice(5, arr.size)
         println(message)
         println("Hellllllllllllllll2")
-        Manager.addEventAction(arr(0).toInt, arr(1).toInt, arr(2).toInt, arr(3), message.mkString(" "))
+        Manager.addEventAction(arr(0).toInt, arr(1).toInt, arr(2).toInt, arr(3), arr(4), message.mkString(" "))
       }
     }  
   }
   println("error2")
   def login(reply: String = "") = Action
   {
-      Ok(views.html.login(reply, Global.hostIP)).withNewSession
+      Ok(views.html.login.render(reply, Global.hostIP)).withNewSession
   }
 
   def loginValidate = Action 
@@ -213,11 +215,13 @@ object BillsController extends Controller {
       }
       var sum = request.getQueryString("sum").get.toInt
       var message = request.getQueryString("message").get
-      Manager.addEventAction(actor, subject, sum, type_message, message)
+      val format = new SimpleDateFormat("s-m-h:d-M-y")
+      var date = format.format(Calendar.getInstance().getTime())
+      Manager.addEventAction(actor, subject, sum, type_message, date, message)
       var out = new BufferedWriter(new OutputStreamWriter(
       new FileOutputStream(Manager.getRoomFileHistory(person.room_.roomInfo_.dormitory, person.room_.roomInfo_.num),true), "UTF-8"));
       try {
-          out.write(actor.toString + " " + subject.toString + " " + sum.toString + " " + type_message + " " + message);
+          out.write(actor.toString + " " + subject.toString + " " + sum.toString + " " + type_message + " " + date + " " + message);
           out.newLine();
       } finally {
           out.close();
