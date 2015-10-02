@@ -1,4 +1,4 @@
-@(name: String)
+@(name: String, host: String)
 
 
 <!DOCTYPE html>
@@ -36,7 +36,7 @@
 
     <div class="container">
 
-      <form class="form-signin" action="http:\\192.168.0.7:9000\loginValidate" method="get">
+      <form class="form-signin" action="@host\loginValidate" method="get">
         @if(name == "error") {
           <h2 style="color:#069" class="form-signin-heading">Username already exist</h2>
         } else {
@@ -45,7 +45,7 @@
         <input type="text" id="inputUsername" class="form-control" name="username" placeholder="Username" required autofocus>
         <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
-        <a class="btn btn-lg btn-primary btn-block" href="http:\\192.168.0.7:9000\register_" >Зарегестрироваться</a>
+        <a class="btn btn-lg btn-primary btn-block" href="@host\register_" >Зарегестрироваться</a>
       </form>
 
     </div> <!-- /container -->

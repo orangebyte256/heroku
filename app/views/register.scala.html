@@ -1,4 +1,4 @@
-@(name: String)
+@(name: String, host: String)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +34,7 @@
   <body>
 
     <div class="container">
-      <form class="form-signin" action="http:\\192.168.0.7:9000\registerValidate" method="get">
+      <form class="form-signin" action="@host\registerValidate" method="get">
         @if(name == "reply") {
           <h2 font-color="red" class="form-signin-heading">Username already exist</h2>
         } else {

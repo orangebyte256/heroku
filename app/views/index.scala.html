@@ -1,5 +1,5 @@
 @import bills.Person
-@(me: Person)
+@(me: Person, host: String)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +50,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="http:\\192.168.0.7:9000\login_">Logout</a></li>
+            <li><a href="@host\login_">Logout</a></li>
             <li><a href="#about">About</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
@@ -85,7 +85,7 @@
       </div>
   
 
-  <form class="form-horizontal" action="http:\\192.168.0.7:9000\addevent" method="get">
+  <form class="form-horizontal" action="@host\addevent" method="get">
     <div class="form-group form-group-lg">
       <h2>
       <span class="label label-info">Кому: </span>

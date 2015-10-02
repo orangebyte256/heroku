@@ -108,7 +108,7 @@ object BillsController extends Controller {
   println("error2")
   def login(reply: String = "") = Action
   {
-      Ok(views.html.login(reply)).withNewSession
+      Ok(views.html.login(reply, Global.hostIP)).withNewSession
   }
 
   def loginValidate = Action 
@@ -146,13 +146,13 @@ object BillsController extends Controller {
 
   def register(reply: String = "") = Action
   {
-      Ok(views.html.register(reply))
+      Ok(views.html.register(reply, Global.hostIP))
   }
 
   def okey() = Action
   {
     implicit request =>
-    Ok(views.html.register(""))
+    Ok(views.html.register("", Global.hostIP))
   }
 
   def registerValidate = Action 
@@ -191,12 +191,12 @@ object BillsController extends Controller {
       var tmp_id = request.session.get("user")
       if (tmp_id == None)
       {
-        Ok(views.html.login.render(""))
+        Ok(views.html.login.render("", Global.hostIP))
       }
       else
       {
         var person = Manager.users.get(tmp_id.get.toInt)
-        Ok(views.html.index(person.get))
+        Ok(views.html.index(person.get, Global.hostIP))
       }
     }
   }
