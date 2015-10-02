@@ -9,10 +9,6 @@ import play.api.mvc.Controller
 import play.api.mvc.WebSocket
 import play.libs.Akka
 import play.api.libs.Crypto
-import snakeyard.actor.WebSocketChannel
-import snakeyard.actor.SnakePool
-import snakeyard.actor.NewSnake
-import snakeyard.actor.ChangeDirection
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import java.io._
