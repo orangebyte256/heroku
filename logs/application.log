@@ -307,3 +307,6 @@ java.lang.RuntimeException: no resource
 	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.1.jar:na]
 	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.1.jar:na]
 
+2015-10-03 03:20:50,338 - [INFO] - from play in pool-4-thread-3 
+Shutdown application default Akka system.
+
