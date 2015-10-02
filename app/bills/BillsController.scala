@@ -92,11 +92,16 @@ object BillsController extends Controller {
   for(element <- Manager.rooms.keys)
   {
     val filename = Manager.getRoomFileHistory(element.dormitory,element.num)
-    for (line <- Source.fromFile(filename, "utf-8").getLines()) 
-    {
-      val arr = line.split(" ")
-      val message = arr.slice(5, arr.size)
-      Manager.addEventAction(arr(0).toInt, arr(1).toInt, arr(2).toInt, arr(3), arr(4), message.mkString(" "))
+    println(filename)
+    try { 
+      for (line <- Source.fromFile(filename, "utf-8").getLines()) 
+      {
+        val arr = line.split(" ")
+        val message = arr.slice(5, arr.size)
+        Manager.addEventAction(arr(0).toInt, arr(1).toInt, arr(2).toInt, arr(3), arr(4), message.mkString(" "))
+      }
+    } catch {
+      case e: Exception => println("lol")
     }
   }
   println("error2")
