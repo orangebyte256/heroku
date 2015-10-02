@@ -92,15 +92,12 @@ object BillsController extends Controller {
   for(element <- Manager.rooms.keys)
   {
     val filename = Manager.getRoomFileHistory(element.dormitory,element.num)
-    if(new java.io.File("/tmp").exists)
+    for (line <- Source.fromFile(filename, "utf-8").getLines()) 
     {
-      for (line <- Source.fromFile(filename, "utf-8").getLines()) 
-      {
-        val arr = line.split(" ")
-        val message = arr.slice(5, arr.size)
-        Manager.addEventAction(arr(0).toInt, arr(1).toInt, arr(2).toInt, arr(3), arr(4), message.mkString(" "))
-      }
-    }  
+      val arr = line.split(" ")
+      val message = arr.slice(5, arr.size)
+      Manager.addEventAction(arr(0).toInt, arr(1).toInt, arr(2).toInt, arr(3), arr(4), message.mkString(" "))
+    }
   }
   println("error2")
   def login(reply: String = "") = Action
