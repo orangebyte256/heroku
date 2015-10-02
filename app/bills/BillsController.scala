@@ -17,7 +17,7 @@ import java.nio.file.{Paths, Files}
 
 object Global
 {
-  val hostIP = "quiet-wildwood-1547.herokuapp.com"
+  val hostIP = "https://quiet-wildwood-1547.herokuapp.com"
   var encryptKey : String = "unset"
   val fileUsersName = "users.txt"
 }
