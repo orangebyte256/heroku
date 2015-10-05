@@ -21,10 +21,10 @@ import org.apache.commons.dbcp2._
 import java.net.URI
 
 object Datasource {
-//  val dbUri = URI.create(System.getenv("DATABASE_URL"))
-  val dbUri = URI.create("postgres://vosmznehduasfl:mmzrzZin9-oLrpe14fWTLCd68g@ec2-54-227-255-240.compute-1.amazonaws.com:5432/d1mapjq5kjrpef")
-  val dbUrl = s"jdbc:postgresql://${dbUri.getHost}:${dbUri.getPort}${dbUri.getPath}?user=vosmznehduasfl&password=mmzrzZin9-oLrpe14fWTLCd68g&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"
-//  val dbUrl = s"jdbc:postgresql://${dbUri.getHost}:${dbUri.getPort}${dbUri.getPath}"
+  val dbUri = URI.create(System.getenv("DATABASE_URL"))
+//  val dbUri = URI.create("postgres://vosmznehduasfl:mmzrzZin9-oLrpe14fWTLCd68g@ec2-54-227-255-240.compute-1.amazonaws.com:5432/d1mapjq5kjrpef")
+//  val dbUrl = s"jdbc:postgresql://${dbUri.getHost}:${dbUri.getPort}${dbUri.getPath}?user=vosmznehduasfl&password=mmzrzZin9-oLrpe14fWTLCd68g&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"
+  val dbUrl = s"jdbc:postgresql://${dbUri.getHost}:${dbUri.getPort}${dbUri.getPath}"
   val connectionPool = new BasicDataSource()
 
   if (dbUri.getUserInfo != null) {
@@ -94,8 +94,8 @@ object Datasource {
 
 object Global
 {
-//  val hostIP = "https://quiet-wildwood-1547.herokuapp.com"
-  val hostIP = "http://localhost:9000"
+  val hostIP = "https://quiet-wildwood-1547.herokuapp.com"
+//  val hostIP = "http://localhost:9000"
   var encryptKey : String = "unset"
   val fileUsersName = "users.txt"
 }
