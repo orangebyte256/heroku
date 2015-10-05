@@ -16,6 +16,7 @@ object SnakeConfig {
 
 case class addPerson(person: Person)
 case class changeSum(person: Person, sum: Int)
+object response
 
 object PersonActor {
   def props(person : Person): Props = 
@@ -34,6 +35,7 @@ class PersonActor(person : Person) extends Actor {
     case changeSum(person: Person, sum: Int) => 
     {
       person_.changeSum(person, sum)
+      sender() ! response
     }
   }
 }

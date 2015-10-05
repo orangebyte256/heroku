@@ -26,6 +26,9 @@ object RoomActor {
 class RoomActor(room : Room)  extends Actor
 {
   var room_ = room
+  var getResponse = 0
+  var needResponse = 0
+  var transferEvent : Event = null
   def receive = {
     case addPerson(person: Person) => {
       room_.addPerson(person)
@@ -41,20 +44,27 @@ class RoomActor(room : Room)  extends Actor
       var element_actor = context.actorSelection("/user/room" + room_.id_.toString + "/id" + element.id_)
       var allPersons = context.actorSelection("/user/room" + room_.id_.toString + "/*")
       println("Hello world")
+      getResponse = 0
+      needResponse = room_.members_.length + 1
       element_actor ! new changeSum(CommonPerson, sum / (room_.members_.count(_ => true)))
       allPersons ! new changeSum(element, -sum / (room_.members_.count(_ => true)))
-      room_.addEvent(Event(element, CommonPerson, sum, date, text))
+      transferEvent = Event(element, CommonPerson, sum, date, text)
     }
     case addEvent(element: Person, subject: Person, sum: Int, date: String, text: String) => {
       var element_actor = context.actorSelection("/user/room" + room_.id_.toString + "/id" + element.id_)
       var subject_actor = context.actorSelection("/user/room" + room_.id_.toString + "/id" + subject.id_)
+      getResponse = 0
+      needResponse = 2
       element_actor ! new changeSum(subject, sum)
       subject_actor ! new changeSum(element, -sum)
-      println(element)
-      println(subject)
-      println(element.name_)
-      println(subject.name_)
-      room_.addEvent(Event(element, subject, sum, date, text))
+      transferEvent = Event(element, subject, sum, date, text)
+    }
+    case response => synchronized {
+      getResponse = getResponse + 1
+      if(getResponse == needResponse)
+      {
+        room_.addEvent(transferEvent)
+      }
     }
   }
 }
@@ -72,6 +82,7 @@ class Room(roomInfo : RoomInfo, id : Int)
 
   def addEvent(event : Event)
   {
+      history.push(event)
       var loop: List[Person] = List()
       do
       {
@@ -93,7 +104,6 @@ class Room(roomInfo : RoomInfo, id : Int)
           loop = List()
         }
       }while(loop != List());
-      history.push(event)
   }
 
   def getMessages(person: Person):collection.mutable.Stack[String] = 
