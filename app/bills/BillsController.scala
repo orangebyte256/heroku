@@ -84,7 +84,7 @@ object Manager
       room_actor ! addEvent(person, subject, sum, date, message)  
   }
 
-  def connectToDataBase() : String
+  def connectToDataBase() : String = 
   {
     Class.forName("org.postgresql.Driver");
     println("good")
