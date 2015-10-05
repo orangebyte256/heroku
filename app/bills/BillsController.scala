@@ -113,6 +113,7 @@ object Manager
     }
     "Ok"
   }
+}
 
 object BillsController extends Controller {
   for (line <- Source.fromFile(Global.fileUsersName, "utf-8").getLines()) {
