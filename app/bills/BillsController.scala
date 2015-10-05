@@ -21,8 +21,9 @@ import org.apache.commons.dbcp2._
 import java.net.URI
 
 object Datasource {
-//  val dbUri = new URI(System.getenv("DATABASE_URL"))
-  val dbUri = URI.create("postgres://vosmznehduasfl:mmzrzZin9-oLrpe14fWTLCd68g@ec2-54-227-255-240.compute-1.amazonaws.com:5432/d1mapjq5kjrpef")
+  val dbUri = URI.create(System.getenv("DATABASE_URL"))
+//  val dbUri = URI.create("postgres://vosmznehduasfl:mmzrzZin9-oLrpe14fWTLCd68g@ec2-54-227-255-240.compute-1.amazonaws.com:5432/d1mapjq5kjrpef")
+//  val dbUrl = s"jdbc:postgresql://${dbUri.getHost}:${dbUri.getPort}${dbUri.getPath}?user=vosmznehduasfl&password=mmzrzZin9-oLrpe14fWTLCd68g&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"
   val dbUrl = s"jdbc:postgresql://${dbUri.getHost}:${dbUri.getPort}${dbUri.getPath}"
   val connectionPool = new BasicDataSource()
 
@@ -33,12 +34,68 @@ object Datasource {
   connectionPool.setDriverClassName("org.postgresql.Driver")
   connectionPool.setUrl(dbUrl)
   connectionPool.setInitialSize(3)
+
+  val connection = connectionPool.getConnection
+  val stmt = connection.createStatement()
+
+  def create()
+  {
+    stmt.executeUpdate("DROP TABLE users;")
+    stmt.executeUpdate("""CREATE TABLE users (
+    id SERIAL PRIMARY KEY, 
+    username text,
+    password text,
+    name text,
+    dormitory int,
+    room int);""")
+ 
+    stmt.executeUpdate("DROP TABLE messages;")
+    stmt.executeUpdate("""CREATE TABLE messages (
+    room_id int,
+    actor_id int,
+    subject_id int,
+    sum int,
+    type text,
+    date text,
+    text text);""")
+
+  }
+
+  def insertUser(dormitory : Int, room : Int, name : String, username : String, password : String): Int = 
+  {
+
+    stmt.executeUpdate("INSERT INTO users(username,password,name,dormitory,room) VALUES (" + 
+      "'" + username + "'," +
+      "'" + password  + "'," +
+      "'" + name  + "'," +
+      dormitory.toString  + "," +
+      room.toString + ");")
+    val rs = stmt.executeQuery("SELECT id FROM users where username = '" + username + "';")
+    rs.next()
+    rs.getInt("id")
+  }
+
+  def insertMessage(actor_id : Int, subject_id : Int, get_sum : Int, type_message : String, date: String, message : String) 
+  {
+
+    var person = Manager.users.get(actor_id).get
+    val room_id = Manager.getRoomNum(person.room_.roomInfo_.dormitory, person.room_.roomInfo_.num)
+    stmt.executeUpdate("INSERT INTO messages VALUES (" + 
+      room_id + "," +
+      actor_id  + "," +
+      subject_id  + "," +
+      get_sum  + "," +
+      "'" + type_message  + "'," +
+      "'" + date + "'," +
+      "'" + message + "');")
+  }
+
 }
 
 object Global
 {
-//  val hostIP = "https://quiet-wildwood-1547.herokuapp.com"
-  val hostIP = "http://localhost:9000"
+  val hostIP = "https://quiet-wildwood-1547.herokuapp.com"
+//  val hostIP = "http://localhost:9000"
   var encryptKey : String = "unset"
   val fileUsersName = "users.txt"
 }
@@ -49,8 +106,6 @@ object Manager
   var users = collection.mutable.Map[Int, Person]()
   var passwords = collection.mutable.Map[String, String]()
   var names = collection.mutable.Map[String, Int]()
-  var id = 0
-
 
   def getRoomNum(dormitory : Int, room : Int) : Int = 
   {
@@ -62,7 +117,7 @@ object Manager
       return (getRoomNum(dormitory, room)).toString + "_history.txt"
   }
 
-  def addPersonToBase(dormitory : Int, room : Int, name : String, username : String, password : String)
+  def addPersonToBase(id : Int, dormitory : Int, room : Int, name : String, username : String, password : String)
   {    
       println(room + dormitory)
       if(!rooms.contains(RoomInfo(room, dormitory)))
@@ -80,7 +135,6 @@ object Manager
       room_actor ! addPerson(person_object)
       passwords += (username -> password)
       names += (username -> id)
-      id = id + 1
   }
 
   def addEventAction(actor_id : Int, subject_id : Int, get_sum : Int, type_message : String, date: String, message : String)
@@ -100,45 +154,34 @@ object Manager
       room_actor ! addEvent(person, subject, sum, date, message)  
   }
 
-  def connectToDataBase() : String = 
+  def addUsersFromDB()
   {
     val connection = Datasource.connectionPool.getConnection
-
     val stmt = connection.createStatement()
-    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)")
-    stmt.executeUpdate("INSERT INTO ticks VALUES (now())")
-    val rs = stmt.executeQuery("SELECT tick FROM ticks")
 
+    val rs = stmt.executeQuery("SELECT id,username,password,name,dormitory,room FROM users;")
     while (rs.next()) {
-      println("Read from DB: " + rs.getTimestamp("tick") + "\n")
+      addPersonToBase(rs.getInt("id"), rs.getInt("dormitory"), rs.getInt("room"), rs.getString("name"), rs.getString("username"), rs.getString("password"))
     }
-    "Ok"
   }
+
+  def addMessagesFromDB()
+  {
+    val connection = Datasource.connectionPool.getConnection
+    val stmt = connection.createStatement()
+    val rs = stmt.executeQuery("SELECT actor_id,subject_id,sum,type,date,text FROM messages;")
+    while (rs.next()) {
+      addEventAction(rs.getInt("actor_id"), rs.getInt("subject_id"), rs.getInt("sum"), rs.getString("type"), rs.getString("date"), rs.getString("text"))
+    }
+  }
+
+
 }
 
 object BillsController extends Controller {
-  for (line <- Source.fromFile(Global.fileUsersName, "utf-8").getLines()) {
-    val arr = line.split(" ")
-    val name = arr.slice(4, arr.size)
-    Manager.addPersonToBase(arr(0).toInt, arr(1).toInt, name.mkString(" "), arr(2), arr(3))
-  }
+  Manager.addUsersFromDB
+  Manager.addMessagesFromDB
 
-  for(element <- Manager.rooms.keys)
-  {
-    val filename = Manager.getRoomFileHistory(element.dormitory,element.num)
-    println(filename)
-    try { 
-      for (line <- Source.fromFile(filename, "utf-8").getLines()) 
-      {
-        val arr = line.split(" ")
-        val message = arr.slice(5, arr.size)
-        Manager.addEventAction(arr(0).toInt, arr(1).toInt, arr(2).toInt, arr(3), arr(4), message.mkString(" "))
-      }
-    } catch {
-      case e: Exception => println("lol")
-    }
-  }
-  println("error2")
   def login(reply: String = "") = Action
   {
       Ok(views.html.login.render(reply, Global.hostIP)).withNewSession
@@ -147,8 +190,10 @@ object BillsController extends Controller {
 
   def answerMe() = Action
   {
-    Ok(Manager.connectToDataBase())
+    Datasource.create
+    Ok("Ok")
   }
+
   def loginValidate = Action 
   {
     implicit request =>
@@ -211,15 +256,8 @@ object BillsController extends Controller {
       var name = request.getQueryString("name").get
       var password = request.getQueryString("password").get
       password = Crypto.encryptAES(password, Global.encryptKey)
-      Manager.addPersonToBase(dormitory, room, name, username, password)
-      var out = new BufferedWriter(new OutputStreamWriter(
-      new FileOutputStream(Global.fileUsersName,true), "UTF-8"));
-      try {
-          out.write(dormitory + " " + room + " " + username + " " + password + " " + name);
-          out.newLine();
-      } finally {
-          out.close();
-      }
+      var id = Datasource.insertUser(dormitory, room, name, username, password)
+      Manager.addPersonToBase(id, dormitory, room, name, username, password)
       Redirect("/login_")
     }
   }
@@ -254,14 +292,7 @@ object BillsController extends Controller {
       val format = new SimpleDateFormat("s-m-h:d-M-y")
       var date = format.format(Calendar.getInstance().getTime())
       Manager.addEventAction(actor, subject, sum, type_message, date, message)
-      var out = new BufferedWriter(new OutputStreamWriter(
-      new FileOutputStream(Manager.getRoomFileHistory(person.room_.roomInfo_.dormitory, person.room_.roomInfo_.num),true), "UTF-8"));
-      try {
-          out.write(actor.toString + " " + subject.toString + " " + sum.toString + " " + type_message + " " + date + " " + message);
-          out.newLine();
-      } finally {
-          out.close();
-      }
+      Datasource.insertMessage(actor, subject, sum, type_message, date, message)
       Redirect("/")
     }
   }
