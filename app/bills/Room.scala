@@ -48,7 +48,7 @@ class RoomActor(room : Room)  extends Actor
       needResponse = room_.members_.length + 1
       element_actor ! new changeSum(CommonPerson, sum / (room_.members_.count(_ => true)))
       allPersons ! new changeSum(element, -sum / (room_.members_.count(_ => true)))
-      transferEvent = Event(element, CommonPerson, sum, date, text)
+      room_.addEvent(Event(element, CommonPerson, sum, date, text))
     }
     case addEvent(element: Person, subject: Person, sum: Int, date: String, text: String) => {
       var element_actor = context.actorSelection("/user/room" + room_.id_.toString + "/id" + element.id_)
@@ -57,13 +57,13 @@ class RoomActor(room : Room)  extends Actor
       needResponse = 2
       element_actor ! new changeSum(subject, sum)
       subject_actor ! new changeSum(element, -sum)
-      transferEvent = Event(element, subject, sum, date, text)
+      room_.addEvent(Event(element, subject, sum, date, text))
     }
     case response => synchronized {
       getResponse = getResponse + 1
       if(getResponse == needResponse)
       {
-        room_.addEvent(transferEvent)
+        room_.findLoop()
       }
     }
   }
@@ -80,9 +80,8 @@ class Room(roomInfo : RoomInfo, id : Int)
       members_ :::= List(person)
   }
 
-  def addEvent(event : Event)
+  def findLoop()
   {
-      history.push(event)
       var loop: List[Person] = List()
       do
       {
@@ -104,6 +103,11 @@ class Room(roomInfo : RoomInfo, id : Int)
           loop = List()
         }
       }while(loop != List());
+  }
+
+  def addEvent(event : Event)
+  {
+      history.push(event)
   }
 
   def getMessages(person: Person):collection.mutable.Stack[String] = 
