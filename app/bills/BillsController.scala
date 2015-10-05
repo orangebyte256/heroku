@@ -15,6 +15,9 @@ import java.text.SimpleDateFormat
 import java.io._
 import scala.io.Source
 import java.nio.file.{Paths, Files}
+import java.sql.DriverManager
+import java.sql.Connection
+
 
 object Global
 {
@@ -31,6 +34,7 @@ object Manager
   var passwords = collection.mutable.Map[String, String]()
   var names = collection.mutable.Map[String, Int]()
   var id = 0
+
 
   def getRoomNum(dormitory : Int, room : Int) : Int = 
   {
@@ -80,6 +84,39 @@ object Manager
       room_actor ! addEvent(person, subject, sum, date, message)  
   }
 
+  def connectToDataBase() : String
+  {
+    Class.forName("org.postgresql.Driver");
+    println("good")
+    val url = "jdbc:postgres://vosmznehduasfl:mmzrzZin9-oLrpe14fWTLCd68g@ec2-54-227-255-240.compute-1.amazonaws.com:5432/d1mapjq5kjrpef"
+    val username = "vosmznehduasfl"
+    val password = "mmzrzZin9-oLrpe14fWTLCd68g"
+
+    // there's probably a better way to do this
+    var connection:Connection = null
+    var res : String = null
+    try {
+      // make the connection
+      //      Class.forName(driver)
+      connection = DriverManager.getConnection(url, username, password)
+      res = "Good"
+      // create the statement, and run the select query
+      val statement = connection.createStatement()
+      val resultSet = statement.executeQuery("SELECT host, user FROM user")
+      while ( resultSet.next() ) {
+        val host = resultSet.getString("host")
+        val user = resultSet.getString("user")
+        println("host, user = " + host + ", " + user)
+      }
+    } catch {
+      case e => {
+        e.printStackTrace
+        res = "Bad"
+      }
+    }
+    connection.close()
+  }
+
 }
 
 object BillsController extends Controller {
@@ -110,6 +147,11 @@ object BillsController extends Controller {
       Ok(views.html.login.render(reply, Global.hostIP)).withNewSession
   }
 
+
+  def answerMe() = Action
+  {
+    Ok(Manager.connectToDataBase())
+  }
   def loginValidate = Action 
   {
     implicit request =>
