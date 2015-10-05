@@ -86,8 +86,8 @@ object Manager
 
   def connectToDataBase() : String = 
   {
-    Class.forName("org.postgresql.Driver");
-    println("good")
+//    Class.forName("org.postgresql.Driver");
+//    println("good")
     val url = "jdbc:postgres://vosmznehduasfl:mmzrzZin9-oLrpe14fWTLCd68g@ec2-54-227-255-240.compute-1.amazonaws.com:5432/d1mapjq5kjrpef"
     val username = "vosmznehduasfl"
     val password = "mmzrzZin9-oLrpe14fWTLCd68g"
