@@ -72,7 +72,6 @@ class Room(roomInfo : RoomInfo, id : Int)
 
   def addEvent(event : Event)
   {
-      history.push(event)
       var loop: List[Person] = List()
       do
       {
@@ -94,6 +93,7 @@ class Room(roomInfo : RoomInfo, id : Int)
           loop = List()
         }
       }while(loop != List());
+      history.push(event)
   }
 
   def getMessages(person: Person):collection.mutable.Stack[String] = 
