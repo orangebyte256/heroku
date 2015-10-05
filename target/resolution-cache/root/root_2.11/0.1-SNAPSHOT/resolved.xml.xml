@@ -4,7 +4,7 @@
 		module="root_2.11"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20151002224855"
+		publication="20151005233719"
 	>
 		<description>
 		root
@@ -41,6 +41,8 @@
 		<dependency org="com.typesafe.play" name="play-java_2.11" rev="2.3.0" conf="compile->default(compile)"/>
 		<dependency org="com.typesafe.play" name="play-java-jdbc_2.11" rev="2.3.0" conf="compile->default(compile)"/>
 		<dependency org="com.typesafe.play" name="play-java-ebean_2.11" rev="2.3.0" conf="compile->default(compile)"/>
+		<dependency org="org.postgresql" name="postgresql" rev="9.3-1102-jdbc41" conf="compile->default(compile)"/>
+		<dependency org="org.apache.commons" name="commons-dbcp2" rev="2.0.1" conf="compile->default(compile)"/>
 		<dependency org="org.webjars" name="webjars-play_2.11" rev="2.3.0" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>

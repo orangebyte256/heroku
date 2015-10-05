@@ -1,6 +1,6 @@
 // @SOURCE:E:/temp/scalas/bills/conf/routes
-// @HASH:c607d7536908b82ccffa12e4af27098eb3561920
-// @DATE:Fri Oct 02 22:49:46 NOVT 2015
+// @HASH:ce49c9bfc5d480b5d9c7fe381d2cce3c03d264d9
+// @DATE:Mon Oct 05 23:41:19 NOVT 2015
 
 
 import play.core._
@@ -83,20 +83,27 @@ bills.BillsController.setEncryptKey(fakeValue[String]),
 HandlerDef(this.getClass.getClassLoader, "", "bills.BillsController", "setEncryptKey", Seq(classOf[String]),"GET", """""", Routes.prefix + """setEncryptKey$key<[^/]+>"""))
         
 
-// @LINE:13
-private[this] lazy val controllers_Assets_at7_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("assets/"),DynamicPart("file", """.+""",false))))
-private[this] lazy val controllers_Assets_at7_invoker = createInvoker(
+// @LINE:11
+private[this] lazy val bills_BillsController_answerMe7_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("answerme"))))
+private[this] lazy val bills_BillsController_answerMe7_invoker = createInvoker(
+bills.BillsController.answerMe(),
+HandlerDef(this.getClass.getClassLoader, "", "bills.BillsController", "answerMe", Nil,"GET", """""", Routes.prefix + """answerme"""))
+        
+
+// @LINE:14
+private[this] lazy val controllers_Assets_at8_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("assets/"),DynamicPart("file", """.+""",false))))
+private[this] lazy val controllers_Assets_at8_invoker = createInvoker(
 controllers.Assets.at(fakeValue[String], fakeValue[String]),
 HandlerDef(this.getClass.getClassLoader, "", "controllers.Assets", "at", Seq(classOf[String], classOf[String]),"GET", """ Map static resources from the /public folder to the /assets URL path""", Routes.prefix + """assets/$file<.+>"""))
         
 
-// @LINE:14
-private[this] lazy val controllers_WebJarAssets_at8_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("webjars/"),DynamicPart("file", """.+""",false))))
-private[this] lazy val controllers_WebJarAssets_at8_invoker = createInvoker(
+// @LINE:15
+private[this] lazy val controllers_WebJarAssets_at9_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("webjars/"),DynamicPart("file", """.+""",false))))
+private[this] lazy val controllers_WebJarAssets_at9_invoker = createInvoker(
 controllers.WebJarAssets.at(fakeValue[String]),
 HandlerDef(this.getClass.getClassLoader, "", "controllers.WebJarAssets", "at", Seq(classOf[String]),"GET", """""", Routes.prefix + """webjars/$file<.+>"""))
         
-def documentation = List(("""GET""", prefix,"""bills.BillsController.index"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """registerValidate""","""bills.BillsController.registerValidate"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """register$info<[^/]+>""","""bills.BillsController.register(info:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """loginValidate""","""bills.BillsController.loginValidate"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """login$info<[^/]+>""","""bills.BillsController.login(info:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """addevent""","""bills.BillsController.addEventAction"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """setEncryptKey$key<[^/]+>""","""bills.BillsController.setEncryptKey(key:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """assets/$file<.+>""","""controllers.Assets.at(path:String = "/public", file:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """webjars/$file<.+>""","""controllers.WebJarAssets.at(file:String)""")).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
+def documentation = List(("""GET""", prefix,"""bills.BillsController.index"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """registerValidate""","""bills.BillsController.registerValidate"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """register$info<[^/]+>""","""bills.BillsController.register(info:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """loginValidate""","""bills.BillsController.loginValidate"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """login$info<[^/]+>""","""bills.BillsController.login(info:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """addevent""","""bills.BillsController.addEventAction"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """setEncryptKey$key<[^/]+>""","""bills.BillsController.setEncryptKey(key:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """answerme""","""bills.BillsController.answerMe()"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """assets/$file<.+>""","""controllers.Assets.at(path:String = "/public", file:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """webjars/$file<.+>""","""controllers.WebJarAssets.at(file:String)""")).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
   case r @ (_,_,_) => s :+ r.asInstanceOf[(String,String,String)]
   case l => s ++ l.asInstanceOf[List[(String,String,String)]] 
 }}
@@ -160,18 +167,26 @@ case bills_BillsController_setEncryptKey6_route(params) => {
 }
         
 
-// @LINE:13
-case controllers_Assets_at7_route(params) => {
-   call(Param[String]("path", Right("/public")), params.fromPath[String]("file", None)) { (path, file) =>
-        controllers_Assets_at7_invoker.call(controllers.Assets.at(path, file))
+// @LINE:11
+case bills_BillsController_answerMe7_route(params) => {
+   call { 
+        bills_BillsController_answerMe7_invoker.call(bills.BillsController.answerMe())
    }
 }
         
 
 // @LINE:14
-case controllers_WebJarAssets_at8_route(params) => {
+case controllers_Assets_at8_route(params) => {
+   call(Param[String]("path", Right("/public")), params.fromPath[String]("file", None)) { (path, file) =>
+        controllers_Assets_at8_invoker.call(controllers.Assets.at(path, file))
+   }
+}
+        
+
+// @LINE:15
+case controllers_WebJarAssets_at9_route(params) => {
    call(params.fromPath[String]("file", None)) { (file) =>
-        controllers_WebJarAssets_at8_invoker.call(controllers.WebJarAssets.at(file))
+        controllers_WebJarAssets_at9_invoker.call(controllers.WebJarAssets.at(file))
    }
 }
         

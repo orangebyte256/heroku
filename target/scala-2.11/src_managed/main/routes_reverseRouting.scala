@@ -1,6 +1,6 @@
 // @SOURCE:E:/temp/scalas/bills/conf/routes
-// @HASH:c607d7536908b82ccffa12e4af27098eb3561920
-// @DATE:Fri Oct 02 22:49:46 NOVT 2015
+// @HASH:ce49c9bfc5d480b5d9c7fe381d2cce3c03d264d9
+// @DATE:Mon Oct 05 23:41:19 NOVT 2015
 
 import Routes.{prefix => _prefix, defaultPrefix => _defaultPrefix}
 import play.core._
@@ -15,15 +15,15 @@ import _root_.play.libs.F
 import Router.queryString
 
 
+// @LINE:15
 // @LINE:14
-// @LINE:13
 package controllers {
 
-// @LINE:14
+// @LINE:15
 class ReverseWebJarAssets {
     
 
-// @LINE:14
+// @LINE:15
 def at(file:String): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "webjars/" + implicitly[PathBindable[String]].unbind("file", file))
@@ -33,11 +33,11 @@ def at(file:String): Call = {
 }
                           
 
-// @LINE:13
+// @LINE:14
 class ReverseAssets {
     
 
-// @LINE:13
+// @LINE:14
 def at(file:String): Call = {
    implicit val _rrc = new ReverseRouteContext(Map(("path", "/public")))
    Call("GET", _prefix + { _defaultPrefix } + "assets/" + implicitly[PathBindable[String]].unbind("file", file))
@@ -49,6 +49,7 @@ def at(file:String): Call = {
 }
                   
 
+// @LINE:11
 // @LINE:10
 // @LINE:9
 // @LINE:8
@@ -58,6 +59,7 @@ def at(file:String): Call = {
 // @LINE:4
 package bills {
 
+// @LINE:11
 // @LINE:10
 // @LINE:9
 // @LINE:8
@@ -86,6 +88,13 @@ def addEventAction(): Call = {
 def register(info:String): Call = {
    import ReverseRouteContext.empty
    Call("GET", _prefix + { _defaultPrefix } + "register" + implicitly[PathBindable[String]].unbind("info", dynamicString(info)))
+}
+                        
+
+// @LINE:11
+def answerMe(): Call = {
+   import ReverseRouteContext.empty
+   Call("GET", _prefix + { _defaultPrefix } + "answerme")
 }
                         
 
@@ -123,16 +132,16 @@ def setEncryptKey(key:String): Call = {
                   
 
 
+// @LINE:15
 // @LINE:14
-// @LINE:13
 package controllers.javascript {
 import ReverseRouteContext.empty
 
-// @LINE:14
+// @LINE:15
 class ReverseWebJarAssets {
     
 
-// @LINE:14
+// @LINE:15
 def at : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.WebJarAssets.at",
    """
@@ -146,11 +155,11 @@ def at : JavascriptReverseRoute = JavascriptReverseRoute(
 }
               
 
-// @LINE:13
+// @LINE:14
 class ReverseAssets {
     
 
-// @LINE:13
+// @LINE:14
 def at : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Assets.at",
    """
@@ -166,6 +175,7 @@ def at : JavascriptReverseRoute = JavascriptReverseRoute(
 }
         
 
+// @LINE:11
 // @LINE:10
 // @LINE:9
 // @LINE:8
@@ -176,6 +186,7 @@ def at : JavascriptReverseRoute = JavascriptReverseRoute(
 package bills.javascript {
 import ReverseRouteContext.empty
 
+// @LINE:11
 // @LINE:10
 // @LINE:9
 // @LINE:8
@@ -214,6 +225,17 @@ def register : JavascriptReverseRoute = JavascriptReverseRoute(
    """
       function(info) {
       return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "register" + (""" + implicitly[PathBindable[String]].javascriptUnbind + """)("info", encodeURIComponent(info))})
+      }
+   """
+)
+                        
+
+// @LINE:11
+def answerMe : JavascriptReverseRoute = JavascriptReverseRoute(
+   "bills.BillsController.answerMe",
+   """
+      function() {
+      return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "answerme"})
       }
    """
 )
@@ -269,16 +291,16 @@ def setEncryptKey : JavascriptReverseRoute = JavascriptReverseRoute(
         
 
 
+// @LINE:15
 // @LINE:14
-// @LINE:13
 package controllers.ref {
 
 
-// @LINE:14
+// @LINE:15
 class ReverseWebJarAssets {
     
 
-// @LINE:14
+// @LINE:15
 def at(file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.WebJarAssets.at(file), HandlerDef(this.getClass.getClassLoader, "", "controllers.WebJarAssets", "at", Seq(classOf[String]), "GET", """""", _prefix + """webjars/$file<.+>""")
 )
@@ -287,11 +309,11 @@ def at(file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
 }
                           
 
-// @LINE:13
+// @LINE:14
 class ReverseAssets {
     
 
-// @LINE:13
+// @LINE:14
 def at(path:String, file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Assets.at(path, file), HandlerDef(this.getClass.getClassLoader, "", "controllers.Assets", "at", Seq(classOf[String], classOf[String]), "GET", """ Map static resources from the /public folder to the /assets URL path""", _prefix + """assets/$file<.+>""")
 )
@@ -302,6 +324,7 @@ def at(path:String, file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.
 }
         
 
+// @LINE:11
 // @LINE:10
 // @LINE:9
 // @LINE:8
@@ -312,6 +335,7 @@ def at(path:String, file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.
 package bills.ref {
 
 
+// @LINE:11
 // @LINE:10
 // @LINE:9
 // @LINE:8
@@ -337,6 +361,12 @@ def addEventAction(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
 // @LINE:6
 def register(info:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    bills.BillsController.register(info), HandlerDef(this.getClass.getClassLoader, "", "bills.BillsController", "register", Seq(classOf[String]), "GET", """""", _prefix + """register$info<[^/]+>""")
+)
+                      
+
+// @LINE:11
+def answerMe(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   bills.BillsController.answerMe(), HandlerDef(this.getClass.getClassLoader, "", "bills.BillsController", "answerMe", Seq(), "GET", """""", _prefix + """answerme""")
 )
                       
 
