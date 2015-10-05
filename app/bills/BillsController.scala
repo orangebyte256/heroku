@@ -115,6 +115,7 @@ object Manager
       }
     }
     connection.close()
+    res
   }
 
 }
