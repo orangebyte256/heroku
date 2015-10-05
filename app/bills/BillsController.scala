@@ -15,9 +15,24 @@ import java.text.SimpleDateFormat
 import java.io._
 import scala.io.Source
 import java.nio.file.{Paths, Files}
-import java.sql.DriverManager
 import java.sql.Connection
+import java.sql.Statement
+import org.apache.commons.dbcp2._
 
+
+object Datasource {
+  val dbUri = new URI(System.getenv("DATABASE_URL"))
+  val dbUrl = s"jdbc:postgresql://${dbUri.getHost}:${dbUri.getPort}${dbUri.getPath}"
+  val connectionPool = new BasicDataSource()
+
+  if (dbUri.getUserInfo != null) {
+    connectionPool.setUsername(dbUri.getUserInfo.split(":")(0))
+    connectionPool.setPassword(dbUri.getUserInfo.split(":")(1))
+  }
+  connectionPool.setDriverClassName("org.postgresql.Driver")
+  connectionPool.setUrl(dbUrl)
+  connectionPool.setInitialSize(3)
+}
 
 object Global
 {
@@ -86,39 +101,18 @@ object Manager
 
   def connectToDataBase() : String = 
   {
-//    Class.forName("org.postgresql.Driver");
-//    println("good")
-    val url = "jdbc:postgres://vosmznehduasfl:mmzrzZin9-oLrpe14fWTLCd68g@ec2-54-227-255-240.compute-1.amazonaws.com:5432/d1mapjq5kjrpef"
-    val username = "vosmznehduasfl"
-    val password = "mmzrzZin9-oLrpe14fWTLCd68g"
+    val connection = Datasource.connectionPool.getConnection
 
-    // there's probably a better way to do this
-    var connection:Connection = null
-    var res : String = null
-    try {
-      // make the connection
-      //      Class.forName(driver)
-      connection = DriverManager.getConnection(url, username, password)
-      res = "Good"
-      // create the statement, and run the select query
-      val statement = connection.createStatement()
-      val resultSet = statement.executeQuery("SELECT host, user FROM user")
-      while ( resultSet.next() ) {
-        val host = resultSet.getString("host")
-        val user = resultSet.getString("user")
-        println("host, user = " + host + ", " + user)
-      }
-    } catch {
-      case e => {
-        e.printStackTrace
-        res = "Bad"
-      }
+    val stmt = connection.createStatement()
+    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)")
+    stmt.executeUpdate("INSERT INTO ticks VALUES (now())")
+    val rs = stmt.executeQuery("SELECT tick FROM ticks")
+
+    while (rs.next()) {
+      println("Read from DB: " + rs.getTimestamp("tick") + "\n")
     }
-    connection.close()
-    res
+    "Ok"
   }
-
-}
 
 object BillsController extends Controller {
   for (line <- Source.fromFile(Global.fileUsersName, "utf-8").getLines()) {
