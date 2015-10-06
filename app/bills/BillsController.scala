@@ -96,7 +96,7 @@ object Global
 {
   val hostIP = "https://quiet-wildwood-1547.herokuapp.com"
 //  val hostIP = "http://localhost:9000"
-  var encryptKey : String = "unset"
+  var encryptKey : String = "murmurnataly1994"
   val fileUsersName = "users.txt"
 }
 
